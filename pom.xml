@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.huntdreams.xxq</groupId>
-    <artifactId>malware-classification</artifactId>
+    <groupId>com.nutsmobi.ads</groupId>
+    <artifactId>nuts-ads-recommendation</artifactId>
     <version>1.0.0</version>
     <modules>
-        <module>random-forest</module>
+        <module>recommendation</module>
     </modules>
     <packaging>pom</packaging>
-    <name>Malware Classification with Spark</name>
+    <name>Nuts ADs Recommendation with Spark</name>
 
     <dependencyManagement>
         <dependencies>
@@ -135,7 +135,7 @@
         </dependencies>
     </dependencyManagement>
 
-    <url>http://github.com/noprom</url>
+    <url>https://github.com/noprom/nuts-ads-recommendation</url>
     <inceptionYear>2016</inceptionYear>
 
     <licenses>
@@ -150,7 +150,7 @@
         <developer>
             <id>noprom</id>
             <name>Tyee noprom</name>
-            <organization>Beijing QiYuan Technology Inc.</organization>
+            <organization>Nutsmobi</organization>
             <email>tyee.noprom@qq.com</email>
         </developer>
     </developers>
