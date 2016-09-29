@@ -1,25 +1,41 @@
 #!/bin/bash
 
-if [ $# -ne 1 ];
+if [ $# -ne 2 ];
 then
-    echo "`basename ${0}`:usage: [start] | [stop] | [status] | [log]"
+    echo "`basename ${0}`:usage: [-local start] | [-local stop] | [-local status] | [-local log] | [-cluster start] | [-cluster stop] | [-cluster status]"
 	exit 1
 fi
 option=$1
+action=$2
 case ${option} in
-    start)
-        salt "*" cmd.run "$ZOOKEEPER_HOME/bin/zkServer.sh start"
+    -local)
+        if [ ${action} == 'start' ];
+            then
+                exec sudo $ZOOKEEPER_HOME/bin/zkServer.sh start
+        elif [ ${action} == 'stop' ]
+            then
+                exec sudo $ZOOKEEPER_HOME/bin/zkServer.sh stop
+        elif [ ${action} == 'status' ]
+            then
+                exec sudo $ZOOKEEPER_HOME/bin/zkServer.sh status
+        elif [ ${action} == 'log' ]
+        then
+            exec sudo cat $ZOOKEEPER_HOME/zookeeper.out
+        fi
         ;;
-    stop)
-        salt "*" cmd.run "$ZOOKEEPER_HOME/bin/zkServer.sh stop"
-        ;;
-    status)
-        salt "*" cmd.run "$ZOOKEEPER_HOME/bin/zkServer.sh status"
-        ;;
-    log)
-        salt "*" cmd.run "cat $ZOOKEEPER_HOME/zookeeper.out"
+    -cluster)
+        if [ ${action} == 'start' ];
+            then
+                salt "*" cmd.run "$ZOOKEEPER_HOME/bin/zkServer.sh start"
+        elif [ ${action} == 'stop' ]
+            then
+                salt "*" cmd.run "$ZOOKEEPER_HOME/bin/zkServer.sh stop"
+        elif [ ${action} == 'status' ]
+            then
+                salt "*" cmd.run "$ZOOKEEPER_HOME/bin/zkServer.sh status"
+        fi
         ;;
     *)
-        echo "`basename ${0}`:usage: [start] | [stop] | [status] | [log]"
+        echo "`basename ${0}`:usage: [-local start] | [-local stop] | [-local status] | [-local log] | [-cluster start] | [-cluster stop] | [-cluster status]"
 	    exit 1
 esac
