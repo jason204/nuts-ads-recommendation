@@ -5,24 +5,24 @@ case ${option} in
      -h)
         echo "Usage:"
         echo "-h                    print help message."
-        echo "module_name           compile module named module_name, modules available: recommendation"
+        echo "module_name           compile module named module_name, modules available: log-processor, recommendation"
         exit 1
         ;;
 esac
 
 cur_dir=$(cd "$(dirname "$0")"; pwd)
 # clean jars
-jar_dir=$cur_dir/../jars
+jar_dir=$cur_dir/../lib
 if [ ! -d $jar_dir ]; then
   mkdir $jar_dir
 fi
 rm -rf $jar_dir/*
 
-# build modules and copy jars
+# build modules and copy lib
 if [ $# -eq 1 ]; then
     modules=($1)
 else
-    modules=("recommendation")
+    modules=("log-processor" "recommendation")
 fi
 for module in ${modules[@]}; do
     echo "building module ${module}..."

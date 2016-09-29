@@ -1,0 +1,70 @@
+# Java Home
+JAVA_HOME=/opt/app/java/jdk1.7.0_79
+CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JAVA_HOME/jre/lib
+export JAVA_HOME
+export CLASSPATH
+export PATH=$JAVA_HOME/bin:$PATH
+
+# Scala Home
+SCALA_HOME=/opt/app/scala/scala-2.10.4
+export SCALA_HOME
+export PATH=$SCALA_HOME/bin:$PATH
+
+# Maven Home
+M2_HOME=/opt/app/maven/apache-maven-3.3.9
+export M2_HOME
+export PATH=$M2_HOME/bin:$PATH
+
+# Fulme Home
+FLUME_HOME=/opt/app/flume/apache-flume-1.6.0-bin
+FLUME_LIB=$FLUME_HOME/lib
+export FLUME_HOME
+export FLUME_LIB
+export PATH=$FLUME_HOME/bin:$PATH
+CLASSPATH=$CLASSPATH:$FLUME_LIB
+export CLASSPATH
+
+# KAFKA HOME
+KAFKA_HOME=/opt/app/kafka/kafka_2.10-0.9.0.1
+KAFKA_LIB=$KAFKA_HOME/libs
+export KAFKA_HOME
+export KAFKA_LIB
+export PATH=$KAFKA_HOME/bin:$PATH
+CLASSPATH=$CLASSPATH:$KAFKA_LIB
+export CLASSPATH
+
+# Spark HOME
+SPARK_HOME=/opt/app/spark/spark-1.6.1-bin-hadoop2.6
+export SPARK_HOME
+export PATH=$SPARK_HOME/bin:$PATH
+
+# Elasticsearch Home
+ELASTICSEARCH_HOME=/opt/app/elasticsearch/elasticsearch-2.1.1
+export ELASTICSEARCH_HOME
+export PATH=$ELASTICSEARCH_HOME/bin:$PATH
+
+# LogStash Home
+LOGSTASH_HOME=/opt/app/logstash/logstash-2.1.1
+export LOGSTASH_HOME
+export PATH=$LOGSTASH_HOME/bin:$PATH
+
+# Kibana Home
+KIBANA_HOME=/opt/app/kibana/kibana-4.3.1-darwin-x64
+export KIBANA_HOME
+export PATH=$KIBANA_HOME/bin:$PATH
+
+# ZooKeeper Home
+ZOOKEEPER_HOME=/opt/app/zookeeper/zookeeper-3.4.8
+export ZOOKEEPER_HOME
+export PATH=$ZOOKEEPER_HOME/bin:$PATH
+
+# Zeppelin Home
+ZEPPELIN_HOME=/opt/app/zeppelin/zeppelin-0.5.6-incubating-bin-all
+export ZEPPELIN_HOME
+export PATH=$ZEPPELIN_HOME/bin:$PATH
+
+export PATH
+export PATH=/usr/local/bin:$PATH
+export PATH=/usr/sbin:$PATH
+export PATH=/usr/local/sbin:$PATH
+alias ll="ls -al"

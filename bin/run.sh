@@ -5,13 +5,8 @@ if [ $# -lt 2 ]; then
     echo "Usage: $0 the-file-you-want-to-submit.jar classname [param1 param2 param3 ...]";
     echo -e "Available commands:\n"
     echo -e "========== Feature extractor ==========\n"
-    echo -e "HexFileTokenCounterFeatureExtractor:"
-    echo "  $ bin/run.sh malware-classification-random-forest-1.0.0-jar-with-dependencies.jar com.huntdreams.rf.feature.extract.HexFileTokenCounterFeatureExtractor <masterUrl> <dataPath> <trainDataPath> <trainLabels>"
-    echo "  $ bin/run.sh malware-classification-random-forest-1.0.0-jar-with-dependencies.jar com.huntdreams.rf.feature.extract.HexFileTokenCounterFeatureExtractor <dataPath> <trainDataPath> <trainLabels>"
-    echo -e "\n==========  Classification   ==========\n"
-    echo -e "HexFileTokenCountFeatureRFClassifier:"
-    echo "  $ bin/run.sh malware-classification-random-forest-1.0.0-jar-with-dependencies.jar com.huntdreams.rf.classification.HexFileTokenCountFeatureRFClassifier <masterUrl> <hexFileTokenCountFeature> <featureTransformer> <numTrees> <trainSize> <testSize>"
-    echo "  $ bin/run.sh malware-classification-random-forest-1.0.0-jar-with-dependencies.jar com.huntdreams.rf.classification.HexFileTokenCountFeatureRFClassifier <hexFileTokenCountFeature> <featureTransformer> <numTrees> <trainSize> <testSize>"
+    echo -e "Recommendation:"
+    echo "  $ bin/run.sh recommendation-1.0.0-jar-with-dependencies.jar com.nutsmobi.ads.recommendation.ALSExample"
     exit 1;
 fi
 
@@ -19,7 +14,7 @@ fi
 filename=$1
 classname=$2
 cur_dir=$(cd "$(dirname "$0")"; pwd)
-jar_dir=$cur_dir/../jars
+jar_dir=$cur_dir/../lib
 filename="$jar_dir/$filename"
 if [ ! -f "$filename" ]; then
     echo "$filename does not exist.";
