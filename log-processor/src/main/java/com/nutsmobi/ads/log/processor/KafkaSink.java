@@ -1,14 +1,20 @@
 package com.nutsmobi.ads.log.processor;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
+import org.apache.avro.data.Json;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.flume.*;
 import org.apache.flume.conf.Configurable;
 import org.apache.flume.sink.AbstractSink;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -67,10 +73,10 @@ public class KafkaSink extends AbstractSink implements Configurable {
                 tx.rollback();
                 return Status.BACKOFF;
             }
-            KeyedMessage<String, String> data = new KeyedMessage<String, String>(topic, new String(e.getBody()));
-
-            producer.send(data);
-            logger.info("flume send data to kafka: " + new String(e.getBody()));
+            // 将接收到的数据处理之后发送给 spark streaming
+            String body = new String(e.getBody());
+            List<KeyedMessage<String, String>> messages = parseMessage(body);
+            producer.send(messages);
             tx.commit();
             return Status.READY;
         } catch (Exception e) {
@@ -80,5 +86,21 @@ public class KafkaSink extends AbstractSink implements Configurable {
         } finally {
             tx.close();
         }
+    }
+
+    /**
+     * 将处理过后的data以list形式返回
+     *
+     * @param data 接收到的flume的采集日志
+     * @return 格式化数据
+     */
+    private List<KeyedMessage<String, String>> parseMessage(String data) {
+        List<KeyedMessage<String, String>> list = new ArrayList<KeyedMessage<String, String>>();
+        String jsonStr = data.split("|")[2];
+        logger.info("jsonStr = " + jsonStr);
+        JSONObject object = JSON.parseObject(jsonStr);
+        JSONArray packages = (JSONArray) object.get("list");
+
+        return list;
     }
 }
