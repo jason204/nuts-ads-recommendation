@@ -27,13 +27,15 @@ public class KafkaSink extends AbstractSink implements Configurable {
     private String zookeeperServer;
     private Producer<String, String> producer;
 
+    /**
+     * Configure kafka sink
+     *
+     * @param context
+     */
     public void configure(Context context) {
-        //topic = "log-topic";
-        //"hk01:9092,hk02:9092,hk03:9092,hk04:9092"
-        //"hk01:2181,hk02:2181,hk03:2181,hk04:2181/kafka"
         topic = context.getString("topic", "log-topic");
         brokerList = context.getString("brokerList", "localhost:9092, localhost:9093, localhost:9094");
-        zookeeperServer = context.getString("zookeeperServer", "localhost:2181");
+        zookeeperServer = context.getString("zookeeperServer", "localhost:2181/kafka");
 
         Properties props = new Properties();
         props.setProperty("metadata.broker.list", brokerList);
@@ -49,6 +51,12 @@ public class KafkaSink extends AbstractSink implements Configurable {
         logger.info("KafkaSink init finished.");
     }
 
+    /**
+     * 接收来自 flume 的消息, 并且作为 kafka 的消息生产者
+     *
+     * @return
+     * @throws EventDeliveryException
+     */
     public Status process() throws EventDeliveryException {
         Channel channel = getChannel();
         Transaction tx = channel.getTransaction();
@@ -59,8 +67,8 @@ public class KafkaSink extends AbstractSink implements Configurable {
                 tx.rollback();
                 return Status.BACKOFF;
             }
-
             KeyedMessage<String, String> data = new KeyedMessage<String, String>(topic, new String(e.getBody()));
+
             producer.send(data);
             logger.info("flume send data to kafka: " + new String(e.getBody()));
             tx.commit();

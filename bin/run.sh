@@ -6,7 +6,7 @@ if [ $# -lt 2 ]; then
     echo -e "Available commands:\n"
     echo -e "========== Feature extractor ==========\n"
     echo -e "Recommendation:"
-    echo "  $ bin/run.sh recommendation-1.0.0-jar-with-dependencies.jar com.nutsmobi.ads.recommendation.ALSExample"
+    echo "  $ bin/run.sh recommendation-1.0.0-jar-with-dependencies.jar com.nutsmobi.ads.recommendation.Recommend localhost:2181/kafka my-consumer-group log-topic 1"
     exit 1;
 fi
 

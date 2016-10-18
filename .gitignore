@@ -10,3 +10,4 @@ spark-warehouse
 data
 out
 local_data
+checkpoint

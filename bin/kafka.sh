@@ -2,7 +2,11 @@
 
 if [ $# -ne 2 ];
 then
-    echo "`basename ${0}`:usage: [-local start] | [-local stop] | [-local consume] | [-local list] | [-local delete] | [-local describe] | [-cluster start] | [-cluster stop] | [-cluster consume]"
+    echo "`basename ${0}`:usage: "
+    echo "-local"
+    echo "      start | stop | consume | list | delete | describe"
+    echo "-cluster"
+    echo "      start | stop | consume"
 	exit 1
 fi
 option=$1
@@ -15,9 +19,9 @@ case ${option} in
             then
                 exec sudo ${KAFKA_HOME}/bin/zookeeper-server-start.sh ${KAFKA_HOME}/config/zookeeper.properties &
                 exec sudo ${KAFKA_HOME}/bin/kafka-server-start.sh ${KAFKA_HOME}/config/server.properties &
-                exec sudo ${KAFKA_HOME}/bin/kafka-server-start.sh ${KAFKA_HOME}/config/server-1.properties &
-                exec sudo ${KAFKA_HOME}/bin/kafka-server-start.sh ${KAFKA_HOME}/config/server-2.properties &
-                exec sudo ${KAFKA_HOME}/bin/kafka-topics.sh --zookeeper ${zookeeper_cluster} --create --replication-factor 1 --partitions 1 --topic ${topic} &
+                exec ${KAFKA_HOME}/bin/kafka-server-start.sh ${KAFKA_HOME}/config/server-1.properties &
+                exec ${KAFKA_HOME}/bin/kafka-server-start.sh ${KAFKA_HOME}/config/server-2.properties &
+                exec ${KAFKA_HOME}/bin/kafka-topics.sh --zookeeper ${zookeeper_cluster} --create --replication-factor 1 --partitions 1 --topic ${topic} &
         elif [ ${action} == 'stop' ]
             then
                 exec sudo ${KAFKA_HOME}/bin/zookeeper-server-stop.sh &
@@ -39,7 +43,7 @@ case ${option} in
         fi
         ;;
     -cluster)
-        # 主机列表
+        # TODO:主机列表
         host=(hk01 hk02 hk03)
         if [ ${action} == 'start' ];
             then
