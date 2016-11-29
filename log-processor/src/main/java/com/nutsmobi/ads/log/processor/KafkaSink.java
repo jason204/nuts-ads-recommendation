@@ -1,14 +1,20 @@
 package com.nutsmobi.ads.log.processor;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
+import org.apache.avro.data.Json;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.flume.*;
 import org.apache.flume.conf.Configurable;
 import org.apache.flume.sink.AbstractSink;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -27,13 +33,15 @@ public class KafkaSink extends AbstractSink implements Configurable {
     private String zookeeperServer;
     private Producer<String, String> producer;
 
+    /**
+     * Configure kafka sink
+     *
+     * @param context
+     */
     public void configure(Context context) {
-        //topic = "log-topic";
-        //"hk01:9092,hk02:9092,hk03:9092,hk04:9092"
-        //"hk01:2181,hk02:2181,hk03:2181,hk04:2181/kafka"
         topic = context.getString("topic", "log-topic");
         brokerList = context.getString("brokerList", "localhost:9092, localhost:9093, localhost:9094");
-        zookeeperServer = context.getString("zookeeperServer", "localhost:2181");
+        zookeeperServer = context.getString("zookeeperServer", "localhost:2181/kafka");
 
         Properties props = new Properties();
         props.setProperty("metadata.broker.list", brokerList);
@@ -49,6 +57,12 @@ public class KafkaSink extends AbstractSink implements Configurable {
         logger.info("KafkaSink init finished.");
     }
 
+    /**
+     * 接收来自 flume 的消息, 并且作为 kafka 的消息生产者
+     *
+     * @return
+     * @throws EventDeliveryException
+     */
     public Status process() throws EventDeliveryException {
         Channel channel = getChannel();
         Transaction tx = channel.getTransaction();
@@ -59,10 +73,10 @@ public class KafkaSink extends AbstractSink implements Configurable {
                 tx.rollback();
                 return Status.BACKOFF;
             }
-
-            KeyedMessage<String, String> data = new KeyedMessage<String, String>(topic, new String(e.getBody()));
-            producer.send(data);
-            logger.info("flume send data to kafka: " + new String(e.getBody()));
+            // 将接收到的数据处理之后发送给 spark streaming
+            String body = new String(e.getBody());
+            List<KeyedMessage<String, String>> messages = parseMessage(body);
+            producer.send(messages);
             tx.commit();
             return Status.READY;
         } catch (Exception e) {
@@ -72,5 +86,21 @@ public class KafkaSink extends AbstractSink implements Configurable {
         } finally {
             tx.close();
         }
+    }
+
+    /**
+     * 将处理过后的data以list形式返回
+     *
+     * @param data 接收到的flume的采集日志
+     * @return 格式化数据
+     */
+    private List<KeyedMessage<String, String>> parseMessage(String data) {
+        List<KeyedMessage<String, String>> list = new ArrayList<KeyedMessage<String, String>>();
+        String jsonStr = data.split("|")[2];
+        logger.info("jsonStr = " + jsonStr);
+        JSONObject object = JSON.parseObject(jsonStr);
+        JSONArray packages = (JSONArray) object.get("list");
+
+        return list;
     }
 }

@@ -41,4 +41,6 @@ HexFileTokenCountFeatureRFClassifier:
 
 ## Evaluation
 
-## Code Directory
+## Data Format
+- h09: user_id
+- list: items_id
